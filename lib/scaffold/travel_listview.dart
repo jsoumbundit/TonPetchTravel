@@ -67,14 +67,14 @@ class _TravelListViewState extends State<TravelListView> {
   Widget showName(int index) {
     return Text(
       travalModels[index].name,
-      style: TextStyle(fontWeight: FontWeight.bold),
+      style: TextStyle(fontWeight: FontWeight.bold,),
     );
   }
 
   Widget showDetail(int index) {
     String string = travalModels[index].detail;
-    if (string.length >= 40) {
-      string = string.substring(0, 39).replaceAll('*', '\n');
+    if (string.length >= 39 ){
+      string = string.substring(0, 70).replaceAll('*', '\n');
       string = '$string ...';
     }
     return Text(string);
@@ -102,15 +102,22 @@ class _TravelListViewState extends State<TravelListView> {
           onTap: () {
             MaterialPageRoute materialPageRoute =
                 MaterialPageRoute(builder: (BuildContext buildContext) {
-              return Detail(travalModel: travalModels[index],);
+              return Detail(
+                travalModel: travalModels[index],
+              );
             });
             Navigator.of(context).push(materialPageRoute);
           },
-          child: Row(
-            children: <Widget>[
-              showImage(index),
-              showText(index),
-            ],
+          child: Container(
+            color: index % 2 == 0
+                ? Colors.white
+                : Colors.deepOrange.shade100,
+            child: Row(
+              children: <Widget>[
+                showImage(index),
+                showText(index),
+              ],
+            ),
           ),
         );
       },

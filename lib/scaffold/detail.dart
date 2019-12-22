@@ -24,6 +24,38 @@ class _DetailState extends State<Detail> {
     createArrayList();
   }
 
+  Widget headTitle(String string) {
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+      width: MediaQuery.of(context).size.width,
+      child: Text(
+        string,
+        style: MyStyle().h3Text,
+      ),
+    );
+  }
+
+  Widget showAddress() {
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+      child: Text(myTravelModel.address),
+    );
+  }
+
+  Set<Marker> mySetMarker() {
+    double lat = myTravelModel.lat;
+    double lng = myTravelModel.lng;
+
+    LatLng latLng = LatLng(lat, lng);
+
+    return <Marker>[
+      Marker(
+        position: latLng,
+        markerId: MarkerId('MyIdMarker'),
+      )
+    ].toSet();
+  }
+
   Widget showMap() {
     double lat = myTravelModel.lat;
     double lng = myTravelModel.lng;
@@ -35,13 +67,14 @@ class _DetailState extends State<Detail> {
     );
 
     return Container(
-      color: Colors.grey,
-      width: 3000,
+      padding: EdgeInsets.only(top: 20.0,bottom: 20.0, left: 20.0, right: 20.0),
+      width: 300.0,
       height: 200.0,
       child: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: cameraPosition,
         onMapCreated: (GoogleMapController googleMapController) {},
+        markers: mySetMarker(),
       ),
     );
   }
@@ -51,6 +84,14 @@ class _DetailState extends State<Detail> {
       return SizedBox();
     } else {
       return showMap();
+    }
+  }
+
+  Widget showMapTitle() {
+    if (myTravelModel.lat == null) {
+      return SizedBox();
+    } else {
+      return headTitle('Map location');
     }
   }
 
@@ -113,8 +154,9 @@ class _DetailState extends State<Detail> {
         itemCount: urlPaths.length,
         itemBuilder: (BuildContext buildContext, int index) {
           return Container(
-            width: 300.0,
-            height: 200.0,
+            padding: EdgeInsets.only(right: 5),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width*0.56,
             child: Image.network(
               urlPaths[index],
               fit: BoxFit.contain,
@@ -126,9 +168,12 @@ class _DetailState extends State<Detail> {
   }
 
   Widget header() {
-    return Text(
-      myTravelModel.name,
-      style: MyStyle().h2Text,
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0,top: 20.0,bottom: 10.0),
+      child: Text(
+        myTravelModel.name,
+        style: MyStyle().h2Text,
+      ),
     );
   }
 
@@ -141,8 +186,12 @@ class _DetailState extends State<Detail> {
         Expanded(
           child: ListView(
             children: <Widget>[
+              headTitle('Detail'),
               showTextDetail(),
+              showMapTitle(),
               showMapLatLng(),
+              headTitle('Address:'),
+              showAddress()
             ],
           ),
         )
