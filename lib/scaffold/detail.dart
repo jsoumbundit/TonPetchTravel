@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tonpetchtravel/models/travel_model.dart';
 import 'package:tonpetchtravel/utility/my_style.dart';
 
@@ -19,7 +20,38 @@ class _DetailState extends State<Detail> {
   void initState() {
     super.initState();
     myTravelModel = widget.travalModel;
+    print('lat: ${myTravelModel.lat}');
     createArrayList();
+  }
+
+  Widget showMap() {
+    double lat = myTravelModel.lat;
+    double lng = myTravelModel.lng;
+
+    LatLng latLng = LatLng(lat, lng);
+    CameraPosition cameraPosition = CameraPosition(
+      target: latLng,
+      zoom: 16.0,
+    );
+
+    return Container(
+      color: Colors.grey,
+      width: 3000,
+      height: 200.0,
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: cameraPosition,
+        onMapCreated: (GoogleMapController googleMapController) {},
+      ),
+    );
+  }
+
+  Widget showMapLatLng() {
+    if (myTravelModel.lat == null) {
+      return SizedBox();
+    } else {
+      return showMap();
+    }
   }
 
   Widget showTextDetail() {
@@ -108,7 +140,10 @@ class _DetailState extends State<Detail> {
         showImage(),
         Expanded(
           child: ListView(
-            children: <Widget>[showTextDetail()],
+            children: <Widget>[
+              showTextDetail(),
+              showMapLatLng(),
+            ],
           ),
         )
       ],
